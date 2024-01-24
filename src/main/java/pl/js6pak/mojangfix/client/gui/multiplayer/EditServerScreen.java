@@ -18,7 +18,7 @@ package pl.js6pak.mojangfix.client.gui.multiplayer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.locale.LanguageManager;
 import org.lwjgl.input.Keyboard;
 import pl.js6pak.mojangfix.client.gui.CallbackButtonWidget;
 
@@ -50,10 +50,10 @@ public class EditServerScreen extends Screen {
             }
 
             this.parent.saveServers();
-            this.minecraft.setScreen(this.parent);
+            this.minecraft.openScreen(this.parent);
         }));
-        this.buttons.add(new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 120 + 12, TranslationStorage.getInstance().get("gui.cancel"), button -> {
-            this.minecraft.setScreen(this.parent);
+        this.buttons.add(new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 120 + 12, LanguageManager.getInstance().translate("gui.cancel"), button -> {
+            this.minecraft.openScreen(this.parent);
         }));
         this.nameTextField = new TextFieldWidget(this, this.textRenderer, this.width / 2 - 100, 60, 200, 20, this.server == null ? "" : this.server.getName());
         this.nameTextField.setMaxLength(32);
@@ -89,9 +89,9 @@ public class EditServerScreen extends Screen {
 
     public void render(int mouseX, int mouseY, float delta) {
         this.renderBackground();
-        this.drawStringWithShadow(this.textRenderer, (this.server == null ? "Add" : "Edit") + " Server", this.width / 2, 20, 16777215);
-        this.drawStringWithShadow(this.textRenderer, "Server name", this.width / 2 - 100, 47, 10526880);
-        this.drawStringWithShadow(this.textRenderer, "Server IP", this.width / 2 - 100, 94, 10526880);
+        this.drawString(this.textRenderer, (this.server == null ? "Add" : "Edit") + " Server", this.width / 2, 20, 16777215);
+        this.drawString(this.textRenderer, "Server name", this.width / 2 - 100, 47, 10526880);
+        this.drawString(this.textRenderer, "Server IP", this.width / 2 - 100, 94, 10526880);
         this.nameTextField.render();
         this.ipTextField.render();
         super.render(mouseX, mouseY, delta);

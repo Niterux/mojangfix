@@ -19,6 +19,11 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +36,7 @@ public class MojangFixMod implements ModInitializer {
         ModContainer mod = FabricLoader.getInstance()
                 .getModContainer("mojangfix")
                 .orElseThrow(NullPointerException::new);
-
+		applyLoggerConfig();
         METADATA = mod.getMetadata();
         LOGGER = LoggerFactory.getLogger(METADATA.getName());
     }
@@ -55,4 +60,14 @@ public class MojangFixMod implements ModInitializer {
     public static String getVersion() {
         return getMetadata().getVersion().getFriendlyString();
     }
+	/**
+	 * Makes Log4J not suck without having to mess with a frickin properties file. (who tf set the default level to ERROR ?!)
+	 */
+	private static void applyLoggerConfig() {
+		LoggerContext context = (LoggerContext) LogManager.getContext(false);
+		Configuration config = context.getConfiguration();
+		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+		loggerConfig.setLevel(Level.INFO);
+		context.updateLoggers();
+	}
 }

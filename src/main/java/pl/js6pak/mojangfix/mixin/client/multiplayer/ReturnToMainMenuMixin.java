@@ -26,8 +26,8 @@ import pl.js6pak.mojangfix.client.gui.multiplayer.MultiplayerScreen;
 
 @Mixin({DisconnectedScreen.class, ConnectScreen.class})
 public class ReturnToMainMenuMixin {
-    @Redirect(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V"))
+    @Redirect(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V"))
     private void redirectSetScreen(Minecraft minecraft, Screen screen) {
-        minecraft.setScreen(new MultiplayerScreen());
+        minecraft.openScreen(new MultiplayerScreen());
     }
 }

@@ -19,18 +19,18 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
+import net.minecraft.client.gui.screen.options.ControlsOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.gui.widget.ListWidget;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.KeyBinding;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import pl.js6pak.mojangfix.mixinterface.KeyBindingAccessor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ControlsListWidget extends EntryListWidget {
+public class ControlsListWidget extends ListWidget {
     private final Minecraft minecraft;
     private final GameOptions options;
 
@@ -45,15 +45,15 @@ public class ControlsListWidget extends EntryListWidget {
     @Getter
     private final Map<KeyBinding, KeyBindingEntry> buttons = new HashMap<>();
 
-    public ControlsListWidget(KeybindsScreen parent, Minecraft minecraft, GameOptions options) {
+    public ControlsListWidget(ControlsOptionsScreen parent, Minecraft minecraft, GameOptions options) {
         super(minecraft, parent.width, parent.height, 36, parent.height - 36, 20);
         this.minecraft = minecraft;
         this.options = options;
     }
 
     @Override
-    protected int getEntryCount() {
-        return options.allKeys.length;
+    protected int size() {
+        return options.keyBindings.length;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ControlsListWidget extends EntryListWidget {
     }
 
     @Override
-    protected boolean isSelectedEntry(int i) {
+    protected boolean isEntrySelected(int i) {
         return false;
     }
 
@@ -80,11 +80,11 @@ public class ControlsListWidget extends EntryListWidget {
     }
 
     @Override
-    protected void renderEntry(int index, int x, int y, int l, Tessellator tessellator) {
-        KeyBinding keyBinding = options.allKeys[index];
+    protected void renderEntry(int index, int x, int y, int l, BufferBuilder tessellator) {
+        KeyBinding keyBinding = options.keyBindings[index];
         KeyBindingEntry entry = buttons.get(keyBinding);
 
-        minecraft.textRenderer.drawWithShadow(options.getKeybindName(index), x, y + 5, -1);
+        minecraft.textRenderer.drawWithShadow(options.getKeyBindingName(index), x, y + 5, -1);
 
         ButtonWidget editButton = entry.getEditButton();
         editButton.x = x + 100;
@@ -94,7 +94,7 @@ public class ControlsListWidget extends EntryListWidget {
         ButtonWidget resetButton = entry.getResetButton();
         resetButton.x = editButton.x + 75;
         resetButton.y = editButton.y;
-        resetButton.active = ((KeyBindingAccessor) keyBinding).getDefaultKeyCode() != keyBinding.code;
+        resetButton.active = ((KeyBindingAccessor) keyBinding).getDefaultKeyCode() != keyBinding.keyCode;
         resetButton.render(minecraft, mouseX, mouseY);
     }
 }

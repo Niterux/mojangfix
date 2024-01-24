@@ -15,10 +15,10 @@
 
 package pl.js6pak.mojangfix.client.gui.multiplayer;
 
-import net.minecraft.client.gui.widget.EntryListWidget;
-import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.gui.widget.ListWidget;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 
-public class MultiplayerServerListWidget extends EntryListWidget {
+public class MultiplayerServerListWidget extends ListWidget {
     private final MultiplayerScreen parent;
 
     public MultiplayerServerListWidget(MultiplayerScreen parent) {
@@ -27,7 +27,7 @@ public class MultiplayerServerListWidget extends EntryListWidget {
     }
 
     @Override
-    protected int getEntryCount() {
+    protected int size() {
         return this.parent.getServersList().size();
     }
 
@@ -37,12 +37,12 @@ public class MultiplayerServerListWidget extends EntryListWidget {
     }
 
     @Override
-    protected boolean isSelectedEntry(int i) {
+    protected boolean isEntrySelected(int i) {
         return i == this.parent.getServersList().indexOf(this.parent.getSelectedServer());
     }
 
     @Override
-    protected int getEntriesHeight() {
+    protected int getHeight() {
         return this.parent.getServersList().size() * 36;
     }
 
@@ -52,9 +52,9 @@ public class MultiplayerServerListWidget extends EntryListWidget {
     }
 
     @Override
-    protected void renderEntry(int index, int x, int y, int l, Tessellator arg) {
+    protected void renderEntry(int index, int x, int y, int l, BufferBuilder arg) {
         ServerData server = this.parent.getServersList().get(index);
-        this.parent.drawStringWithShadow(this.parent.getFontRenderer(), server.getName(), x + 2, y + 1, 0xffffff);
-        this.parent.drawStringWithShadow(this.parent.getFontRenderer(), server.getIp(), x + 2, y + 12, 0x808080);
+        this.parent.drawString(this.parent.getFontRenderer(), server.getName(), x + 2, y + 1, 0xffffff);
+        this.parent.drawString(this.parent.getFontRenderer(), server.getIp(), x + 2, y + 12, 0x808080);
     }
 }

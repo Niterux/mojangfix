@@ -16,11 +16,11 @@
 package pl.js6pak.mojangfix.mixin.client.controls;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
+import net.minecraft.client.gui.screen.options.ControlsOptionsScreen ;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.OptionButtonWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -32,28 +32,28 @@ import pl.js6pak.mojangfix.client.gui.CallbackButtonWidget;
 import pl.js6pak.mojangfix.client.gui.ControlsListWidget;
 import pl.js6pak.mojangfix.mixinterface.KeyBindingAccessor;
 
-@Mixin(KeybindsScreen.class)
+@Mixin(ControlsOptionsScreen.class)
 public class ControlsOptionsScreenMixin extends Screen {
     @Shadow
-    private GameOptions gameOptions;
+    private GameOptions options;
 
     @Unique
     private ControlsListWidget controlsList;
 
     @Inject(method = "init", at = @At("HEAD"))
     private void onInit(CallbackInfo ci) {
-        this.controlsList = new ControlsListWidget((KeybindsScreen) (Object) this, minecraft, gameOptions);
+        this.controlsList = new ControlsListWidget((ControlsOptionsScreen) (Object) this, minecraft, options);
     }
 
     @Redirect(method = "init", at = @At(value = "NEW", target = "net/minecraft/client/gui/widget/OptionButtonWidget"))
     private OptionButtonWidget redirectOptionButtonWidget(int id, int x, int y, int width, int height, String text) {
         OptionButtonWidget editButton = new OptionButtonWidget(id, -1, -1, width, height, text);
         CallbackButtonWidget resetButton = new CallbackButtonWidget(-1, -1, 50, 20, "Reset", (button) -> {
-            KeyBinding keyBinding = this.gameOptions.allKeys[id];
-            keyBinding.code = ((KeyBindingAccessor) keyBinding).getDefaultKeyCode();
-            ((ButtonWidget) this.buttons.get(id)).text = this.gameOptions.getKeybindKey(id);
+            KeyBinding keyBinding = this.options.keyBindings[id];
+            keyBinding.keyCode = ((KeyBindingAccessor) keyBinding).getDefaultKeyCode();
+            ((ButtonWidget) this.buttons.get(id)).message = this.options.getKeyBindingName(id);
         });
-        controlsList.getButtons().put(this.gameOptions.allKeys[id], new ControlsListWidget.KeyBindingEntry(editButton, resetButton));
+        controlsList.getButtons().put(this.options.keyBindings[id], new ControlsListWidget.KeyBindingEntry(editButton, resetButton));
         return editButton;
     }
 
@@ -72,12 +72,12 @@ public class ControlsOptionsScreenMixin extends Screen {
         return doneButton = new ButtonWidget(id, x, this.height - 30, text);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/KeybindsScreen;renderBackground()V", shift = At.Shift.AFTER))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/options/ControlsOptionsScreen;renderBackground()V", shift = At.Shift.AFTER))
     private void onRender(int mouseX, int mouseY, float delta, CallbackInfo ci) {
         this.controlsList.render(mouseX, mouseY, delta);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/KeybindsScreen;method_1943()I"), cancellable = true)
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/options/ControlsOptionsScreen;getControlsListX()I"), cancellable = true)
     private void onDrawButtons(int mouseX, int mouseY, float delta, CallbackInfo ci) {
         doneButton.render(this.minecraft, mouseX, mouseY);
         ci.cancel();

@@ -15,11 +15,11 @@
 
 package pl.js6pak.mojangfix.mixin.client.skin;
 
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.texture.ImageProcessor;
+import net.minecraft.client.render.world.WorldRenderer;
+import net.minecraft.client.render.texture.HttpImageProcessor;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.entity.living.player.InputPlayerEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,9 +32,9 @@ import pl.js6pak.mojangfix.mixinterface.SkinImageProcessorAccessor;
 
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
-    @Inject(method = "unloadEntitySkin", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "onEntityRemoved", at = @At("HEAD"), cancellable = true)
     private void dontUnloadLocalPlayerSkin(Entity entity, CallbackInfo ci) {
-        if (entity instanceof ClientPlayerEntity) {
+        if (entity instanceof InputPlayerEntity) {
             ci.cancel();
         }
     }
@@ -42,16 +42,16 @@ public class WorldRendererMixin {
     @Unique
     private Entity currentEntity; // I hate this but there is no way to get it from @ModifyArg
 
-    @Inject(method = "loadEntitySkin", at = @At("HEAD"))
+    @Inject(method = "onEntityAdded", at = @At("HEAD"))
     private void getEnttity(Entity entity, CallbackInfo ci) {
         currentEntity = entity;
     }
 
     @ModifyArg(
-        method = "loadEntitySkin", index = 1,
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;downloadImage(Ljava/lang/String;Lnet/minecraft/client/texture/ImageProcessor;)Lnet/minecraft/client/texture/ImageDownload;", ordinal = 0)
+        method = "onEntityAdded", index = 1,
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/texture/TextureManager;getHttpTexture(Ljava/lang/String;Lnet/minecraft/client/render/texture/HttpImageProcessor;)Lnet/minecraft/client/render/texture/HttpTexture;", ordinal = 0)
     )
-    private ImageProcessor redirectSkinProcessor(ImageProcessor def) {
+    private HttpImageProcessor redirectSkinProcessor(HttpImageProcessor def) {
         if (currentEntity instanceof PlayerEntity) {
             PlayerEntityAccessor playerEntityAccessor = (PlayerEntityAccessor) currentEntity;
             SkinImageProcessorAccessor skinImageProcessorAccessor = (SkinImageProcessorAccessor) def;
@@ -61,10 +61,10 @@ public class WorldRendererMixin {
     }
 
     @ModifyArg(
-        method = "loadEntitySkin", index = 1,
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;downloadImage(Ljava/lang/String;Lnet/minecraft/client/texture/ImageProcessor;)Lnet/minecraft/client/texture/ImageDownload;", ordinal = 1)
+        method = "onEntityAdded", index = 1,
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/texture/TextureManager;getHttpTexture(Ljava/lang/String;Lnet/minecraft/client/render/texture/HttpImageProcessor;)Lnet/minecraft/client/render/texture/HttpTexture;", ordinal = 1)
     )
-    private ImageProcessor redirectCapeProcessor(ImageProcessor def) {
+    private HttpImageProcessor redirectCapeProcessor(HttpImageProcessor def) {
         return new CapeImageProcessor();
     }
 }

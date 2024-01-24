@@ -17,8 +17,8 @@ package pl.js6pak.mojangfix.mixin.client.skin;
 
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.model.entity.HumanoidModel;
+import net.minecraft.client.render.model.Model;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,18 +30,18 @@ import pl.js6pak.mojangfix.client.skinfix.PlayerEntityModel;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer implements PlayerEntityRendererAccessor {
     @Shadow
-    private BipedEntityModel bipedModel;
+    private HumanoidModel handmodel;
 
-    public PlayerEntityRendererMixin(EntityModel arg, float f) {
+    public PlayerEntityRendererMixin(Model arg, float f) {
         super(arg, f);
     }
 
     public void setThinArms(boolean thinArms) {
-        this.model = this.bipedModel = new PlayerEntityModel(0.0F, thinArms);
+        this.model = this.handmodel = new PlayerEntityModel(0.0F, thinArms);
     }
 
-    @Inject(method = "renderHand", at = @At("RETURN"))
+    @Inject(method = "renderPlayerRightHandModel", at = @At("RETURN"))
     private void fixFirstPerson(CallbackInfo ci) {
-        ((PlayerEntityModel) bipedModel).rightSleeve.render(0.0625F);
+        ((PlayerEntityModel) handmodel).rightSleeve.render(0.0625F);
     }
 }

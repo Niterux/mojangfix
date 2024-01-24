@@ -15,7 +15,7 @@
 
 package pl.js6pak.mojangfix.mixin.client.text;
 
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.lwjgl.input.Keyboard;
 import org.objectweb.asm.Opcodes;
@@ -32,7 +32,7 @@ public class TextFieldWidgetMixin implements TextFieldWidgetAccessor {
     public boolean focused;
 
     @Shadow
-    public boolean enabled;
+    public boolean editable;
 
     @Shadow
     private String text;
@@ -93,13 +93,13 @@ public class TextFieldWidgetMixin implements TextFieldWidgetAccessor {
         this.text = (new StringBuilder(this.text)).insert(this.text.length() + this.cursorPosition, text).toString();
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;drawStringWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"))
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;drawString(Lnet/minecraft/client/render/TextRenderer;Ljava/lang/String;III)V"))
     private void onDrawTextBox(TextFieldWidget guiTextField, TextRenderer textRenderer, String text, int x, int y, int color) {
-        guiTextField.drawStringWithShadow(textRenderer, this.getDisplayText(), x, y, color);
+        guiTextField.drawString(textRenderer, this.getDisplayText(), x, y, color);
     }
 
     public String getDisplayText() {
         boolean caretVisible = this.focused && this.focusedTicks / 6 % 2 == 0;
-        return this.enabled ? (new StringBuilder(this.text)).insert(this.text.length() + this.cursorPosition, caretVisible ? "_" : "").toString() : this.text;
+        return this.editable ? (new StringBuilder(this.text)).insert(this.text.length() + this.cursorPosition, caretVisible ? "_" : "").toString() : this.text;
     }
 }

@@ -32,7 +32,7 @@ import pl.js6pak.mojangfix.mixinterface.SignBlockEntityAccessor;
 @Mixin(SignBlockEntity.class)
 public class SignBlockEntityMixin extends BlockEntity implements SignBlockEntityAccessor {
     @Shadow
-    public String[] texts;
+    public String[] lines;
 
     @Unique
     @Getter
@@ -40,20 +40,20 @@ public class SignBlockEntityMixin extends BlockEntity implements SignBlockEntity
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {
-        for (int i = 0; i < texts.length; i++) {
-            TextFieldWidget textField = textFields[i] = new TextFieldWidget(null, MinecraftAccessor.getInstance().textRenderer, -1, -1, -1, -1, texts[i]);
+        for (int i = 0; i < lines.length; i++) {
+            TextFieldWidget textField = textFields[i] = new TextFieldWidget(null, MinecraftAccessor.getInstance().textRenderer, -1, -1, -1, -1, lines[i]);
             textField.setMaxLength(15);
         }
     }
 
     @Inject(method = "readNbt", at = @At("RETURN"))
     private void onReadNbt(CallbackInfo ci) {
-        for (int i = 0; i < texts.length; i++) {
-            textFields[i].setText(texts[i]);
+        for (int i = 0; i < lines.length; i++) {
+            textFields[i].setText(lines[i]);
         }
     }
 
-    @Redirect(method = "writeNbt", at = @At(value = "FIELD", target = "Lnet/minecraft/block/entity/SignBlockEntity;texts:[Ljava/lang/String;", args = "array=get"))
+    @Redirect(method = "writeNbt", at = @At(value = "FIELD", target = "Lnet/minecraft/block/entity/SignBlockEntity;lines:[Ljava/lang/String;", args = "array=get"))
     private String getSignText(String[] signText, int i) {
         return textFields[i].getText();
     }

@@ -16,7 +16,7 @@
 package pl.js6pak.mojangfix.mixin.client.text.sign;
 
 import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;
+import net.minecraft.client.render.block.entity.SignRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.js6pak.mojangfix.mixinterface.TextFieldWidgetAccessor;
 import pl.js6pak.mojangfix.mixinterface.SignBlockEntityAccessor;
 
-@Mixin(SignBlockEntityRenderer.class)
+@Mixin(SignRenderer.class)
 public class SignBlockEntityRendererMixin {
     @Unique
     private SignBlockEntity sign;
@@ -36,7 +36,7 @@ public class SignBlockEntityRendererMixin {
         this.sign = sign;
     }
 
-    @Redirect(method = "render(Lnet/minecraft/block/entity/SignBlockEntity;DDDF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/block/entity/SignBlockEntity;texts:[Ljava/lang/String;", args = "array=get"))
+    @Redirect(method = "render(Lnet/minecraft/block/entity/SignBlockEntity;DDDF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/block/entity/SignBlockEntity;lines:[Ljava/lang/String;", args = "array=get"))
     private String getSignText(String[] signText, int i) {
         return ((TextFieldWidgetAccessor) ((SignBlockEntityAccessor) sign).getTextFields()[i]).getDisplayText();
     }

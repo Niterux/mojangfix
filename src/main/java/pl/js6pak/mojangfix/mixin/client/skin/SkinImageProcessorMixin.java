@@ -17,7 +17,7 @@ package pl.js6pak.mojangfix.mixin.client.skin;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import lombok.Setter;
-import net.minecraft.client.texture.SkinImageProcessor;
+import net.minecraft.client.render.texture.SkinImageProcessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;

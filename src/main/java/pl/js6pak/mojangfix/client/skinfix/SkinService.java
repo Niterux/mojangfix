@@ -17,7 +17,7 @@ package pl.js6pak.mojangfix.client.skinfix;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.exception.property.PropertyException;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import pl.js6pak.mojangfix.MojangFixMod;
 import pl.js6pak.mojangfix.client.skinfix.provider.AshconProfileProvider;
 import pl.js6pak.mojangfix.client.skinfix.provider.MojangProfileProvider;
@@ -57,9 +57,9 @@ public class SkinService {
 
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         accessor.setTextureModel(playerProfile.getModel());
-        player.skinUrl = playerProfile.getSkinUrl();
-        player.capeUrl = player.playerCapeUrl = playerProfile.getCapeUrl();
-        MinecraftAccessor.getInstance().worldRenderer.loadEntitySkin(player);
+        player.skin = playerProfile.getSkinUrl();
+        player.cloak = player.cape = playerProfile.getCapeUrl();
+        MinecraftAccessor.getInstance().worldRenderer.onEntityAdded(player);
     }
 
     private boolean updatePlayer(PlayerEntity player) {

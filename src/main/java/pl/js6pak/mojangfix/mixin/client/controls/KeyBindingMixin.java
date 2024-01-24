@@ -16,7 +16,7 @@
 package pl.js6pak.mojangfix.mixin.client.controls;
 
 import lombok.Getter;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.options.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,7 +28,7 @@ import pl.js6pak.mojangfix.mixinterface.KeyBindingAccessor;
 @Mixin(KeyBinding.class)
 public class KeyBindingMixin implements KeyBindingAccessor {
     @Shadow
-    public int code;
+    public int keyCode;
 
     @Unique
     @Getter
@@ -36,6 +36,6 @@ public class KeyBindingMixin implements KeyBindingAccessor {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(String translationKey, int code, CallbackInfo ci) {
-        this.defaultKeyCode = this.code;
+        this.defaultKeyCode = this.keyCode;
     }
 }

@@ -15,8 +15,8 @@
 
 package pl.js6pak.mojangfix.mixin.client.skin;
 
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.model.ModelPart;
+import net.minecraft.client.render.model.entity.HumanoidModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -25,17 +25,17 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import pl.js6pak.mojangfix.mixinterface.ModelPartAccessor;
 import pl.js6pak.mojangfix.client.skinfix.PlayerEntityModel;
 
-@Mixin(BipedEntityModel.class)
+@Mixin(HumanoidModel.class)
 public class BipedEntityModelMixin {
     @Redirect(
             method = "<init>(FF)V",
-            at = @At(value = "NEW", target = "net/minecraft/client/model/ModelPart"),
-            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/render/entity/model/BipedEntityModel;ears:Lnet/minecraft/client/model/ModelPart;", shift = Shift.AFTER))
+            at = @At(value = "NEW", target = "net/minecraft/client/render/model/ModelPart"),
+            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/render/model/entity/HumanoidModel;deadmau5Ears:Lnet/minecraft/client/render/model/ModelPart;", shift = Shift.AFTER))
     )
     private ModelPart onTexturedQuad(int u, int v) {
         ModelPart modelPart = new ModelPart(u, v);
 
-        BipedEntityModel self = (BipedEntityModel) (Object) this;
+		HumanoidModel self = (HumanoidModel) (Object) this;
         if (self instanceof PlayerEntityModel) {
             ((ModelPartAccessor) modelPart).setTextureHeight(64);
         }

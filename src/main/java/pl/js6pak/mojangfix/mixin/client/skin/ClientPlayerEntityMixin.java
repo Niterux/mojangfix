@@ -15,8 +15,8 @@
 
 package pl.js6pak.mojangfix.mixin.client.skin;
 
-import net.minecraft.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.entity.living.player.InputPlayerEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.js6pak.mojangfix.client.skinfix.SkinService;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(InputPlayerEntity.class)
 
 public abstract class ClientPlayerEntityMixin extends PlayerEntity {
 	public ClientPlayerEntityMixin(World arg) {

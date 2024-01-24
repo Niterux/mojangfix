@@ -16,8 +16,8 @@
 package pl.js6pak.mojangfix.mixin.client.inventory;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.MultiplayerClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.entity.living.player.LocalPlayerEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,9 +25,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.js6pak.mojangfix.mixin.client.MinecraftAccessor;
 
-@Mixin({MultiplayerClientPlayerEntity.class, PlayerEntity.class})
+@Mixin({LocalPlayerEntity.class, PlayerEntity.class})
 public abstract class PlayerEntityMixin {
-    @Inject(method = "dropSelectedItem", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "dropItem", at = @At("HEAD"), cancellable = true)
     private void onDropSelectedItem(CallbackInfo ci) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
             Minecraft minecraft = MinecraftAccessor.getInstance();

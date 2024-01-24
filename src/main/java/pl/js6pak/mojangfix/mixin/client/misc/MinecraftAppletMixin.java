@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(MinecraftApplet.class)
 public class MinecraftAppletMixin {
-    @Redirect(method = "init", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Minecraft;isApplet:Z"))
+    @Redirect(method = "init", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/client/Minecraft;paused:Z")) //paused is a mismapping!
     private void disableIsApplet(Minecraft minecraft, boolean value) {
     }
 }

@@ -17,8 +17,8 @@ package pl.js6pak.mojangfix.mixin.client.controls;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.options.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,7 +34,7 @@ import java.util.Arrays;
 @Mixin(GameOptions.class)
 public class GameOptionsMixin implements GameSettingsAccessor {
     @Shadow
-    public KeyBinding[] allKeys;
+    public KeyBinding[] keyBindings;
 
     @Unique
     @Getter
@@ -43,8 +43,8 @@ public class GameOptionsMixin implements GameSettingsAccessor {
 
     @Inject(method = {"<init>()V", "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V"}, at = @At("RETURN"))
     public void onInit(CallbackInfo ci) {
-        ArrayList<KeyBinding> newKeys = new ArrayList<>(Arrays.asList(allKeys));
+        ArrayList<KeyBinding> newKeys = new ArrayList<>(Arrays.asList(keyBindings));
         newKeys.add(MojangFixClientMod.COMMAND_KEYBIND);
-        allKeys = newKeys.toArray(new KeyBinding[0]);
+		keyBindings = newKeys.toArray(new KeyBinding[0]);
     }
 }

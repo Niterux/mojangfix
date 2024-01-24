@@ -16,7 +16,7 @@
 package pl.js6pak.mojangfix.mixin.client.text.sign;
 
 import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.gui.screen.inventory.menu.SignEditScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,7 +54,7 @@ public class SignEditScreenMixin {
         }
         textFields[this.currentRow].setFocused(true);
         textFields[this.currentRow].keyPressed(character, keyCode);
-        this.sign.texts[this.currentRow] = textFields[this.currentRow].getText();
+        this.sign.lines[this.currentRow] = textFields[this.currentRow].getText();
         ci.cancel();
     }
 
@@ -66,7 +66,7 @@ public class SignEditScreenMixin {
         }
     }
 
-    @Redirect(method = "removed", at = @At(value = "FIELD", target = "Lnet/minecraft/block/entity/SignBlockEntity;texts:[Ljava/lang/String;"))
+    @Redirect(method = "removed", at = @At(value = "FIELD", target = "Lnet/minecraft/block/entity/SignBlockEntity;lines:[Ljava/lang/String;"))
     private String[] getSignText(SignBlockEntity sign) {
         return Arrays.stream(((SignBlockEntityAccessor) sign).getTextFields()).map(TextFieldWidget::getText).toArray(String[]::new);
     }

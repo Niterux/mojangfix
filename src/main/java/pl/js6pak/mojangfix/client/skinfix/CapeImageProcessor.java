@@ -15,12 +15,12 @@
 
 package pl.js6pak.mojangfix.client.skinfix;
 
-import net.minecraft.client.texture.ImageProcessor;
+import net.minecraft.client.render.texture.HttpImageProcessor;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class CapeImageProcessor implements ImageProcessor {
+public class CapeImageProcessor implements HttpImageProcessor {
     @Override
     public BufferedImage process(BufferedImage image) {
         if (image == null) {

@@ -17,11 +17,11 @@ package pl.js6pak.mojangfix.mixin.client.auth;
 
 import com.github.steveice10.mc.auth.exception.request.RequestException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.ClientNetworkHandler;
+import net.minecraft.client.network.handler.ClientNetworkHandler;
 import net.minecraft.network.Connection;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.handshake.HandshakePacket;
-import net.minecraft.network.packet.login.LoginHelloPacket;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.HandshakePacket;
+import net.minecraft.network.packet.LoginPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,7 +46,7 @@ public abstract class ClientNetworkHandlerMixin {
         return serverId.trim().isEmpty() || serverId.equals(offline) || this.minecraft.session.sessionId.trim().isEmpty() || this.minecraft.session.sessionId.equals(offline);
     }
 
-    @Inject(method = "handleHandshake", at = @At(value = "NEW", target = "java/net/URL"), cancellable = true)
+    @Inject(method = "handleHandshake(Lnet/minecraft/network/packet/HandshakePacket;)V", at = @At(value = "NEW", target = "java/net/URL"), cancellable = true)
     private void onJoinServer(HandshakePacket packet, CallbackInfo ci) {
         SessionAccessor session = (SessionAccessor) this.minecraft.session;
 
@@ -55,8 +55,8 @@ public abstract class ClientNetworkHandlerMixin {
                 this.connection.disconnect("disconnect.loginFailedInfo", "Invalid access token!");
             }
 
-            SessionAccessor.SESSION_SERVICE.joinServer(session.getGameProfile(), session.getAccessToken(), packet.name);
-            this.sendPacket(new LoginHelloPacket(this.minecraft.session.username, 14));
+            SessionAccessor.SESSION_SERVICE.joinServer(session.getGameProfile(), session.getAccessToken(), packet.key);
+            this.sendPacket(new LoginPacket(this.minecraft.session.username, 14));
         } catch (RequestException e) {
             this.connection.disconnect("disconnect.loginFailedInfo", e.getClass().getSimpleName() + "\n" + e.getMessage());
         }

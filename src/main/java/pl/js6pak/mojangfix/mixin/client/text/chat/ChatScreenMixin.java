@@ -15,7 +15,7 @@
 
 package pl.js6pak.mojangfix.mixin.client.text.chat;
 
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -66,17 +66,17 @@ public class ChatScreenMixin extends Screen implements ChatScreenAccessor {
         ci.cancel();
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;drawStringWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"))
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;drawString(Lnet/minecraft/client/render/TextRenderer;Ljava/lang/String;III)V"))
     private void redirectDrawString(ChatScreen chatScreen, TextRenderer textRenderer, String text, int x, int y, int color) {
-        this.drawStringWithShadow(textRenderer, "> " + ((TextFieldWidgetAccessor) this.textField).getDisplayText(), x, y, color);
+        this.drawString(textRenderer, "> " + ((TextFieldWidgetAccessor) this.textField).getDisplayText(), x, y, color);
     }
 
-    @Redirect(method = "*", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/ChatScreen;text:Ljava/lang/String;", opcode = Opcodes.GETFIELD))
+    @Redirect(method = "*", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/ChatScreen;lastChatMessage:Ljava/lang/String;", opcode = Opcodes.GETFIELD))
     private String getMessage(ChatScreen chatScreen) {
         return this.textField.getText();
     }
 
-    @Inject(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ClientPlayerEntity;sendChatMessage(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/InputPlayerEntity;sendChat(Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onSendChatMessage(char character, int keyCode, CallbackInfo ci, String var3, String message) {
         int size = CHAT_HISTORY.size();
         if (size > 0 && CHAT_HISTORY.get(size - 1).equals(message)) {

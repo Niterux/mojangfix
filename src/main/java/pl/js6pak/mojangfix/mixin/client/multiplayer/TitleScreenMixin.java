@@ -25,8 +25,8 @@ import pl.js6pak.mojangfix.client.gui.multiplayer.MultiplayerScreen;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin extends Screen {
-    @Redirect(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 2))
+    @Redirect(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 2))
     private void onNewGuiMainMenu(Minecraft minecraft, Screen screen) {
-        minecraft.setScreen(new MultiplayerScreen(this));
+        minecraft.openScreen(new MultiplayerScreen(this));
     }
 }

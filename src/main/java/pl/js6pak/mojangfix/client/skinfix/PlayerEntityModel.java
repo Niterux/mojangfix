@@ -15,11 +15,11 @@
 
 package pl.js6pak.mojangfix.client.skinfix;
 
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.model.ModelPart;
+import net.minecraft.client.render.model.entity.HumanoidModel;
 import pl.js6pak.mojangfix.mixinterface.ModelPartAccessor;
 
-public class PlayerEntityModel extends BipedEntityModel {
+public class PlayerEntityModel extends HumanoidModel {
     public final ModelPart leftSleeve;
     public final ModelPart rightSleeve;
     public final ModelPart leftPantLeg;
@@ -30,40 +30,40 @@ public class PlayerEntityModel extends BipedEntityModel {
         super(scale);
         if (thinArms) {
             this.leftArm = this.createModelPart(32, 48);
-            this.leftArm.addCuboid(-1.0F, -2.0F, -2.0F, 3, 12, 4, scale);
+            this.leftArm.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, scale);
             this.leftArm.setPivot(5.0F, 2.5F, 0.0F);
             this.rightArm = this.createModelPart(40, 16);
-            this.rightArm.addCuboid(-2.0F, -2.0F, -2.0F, 3, 12, 4, scale);
+            this.rightArm.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, scale);
             this.rightArm.setPivot(-5.0F, 2.5F, 0.0F);
             this.leftSleeve = this.createModelPart(48, 48);
-            this.leftSleeve.addCuboid(-1.0F, -2.0F, -2.0F, 3, 12, 4, scale + 0.25F);
+            this.leftSleeve.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, scale + 0.25F);
             this.leftSleeve.setPivot(5.0F, 2.5F, 0.0F);
             this.rightSleeve = this.createModelPart(40, 32);
-            this.rightSleeve.addCuboid(-2.0F, -2.0F, -2.0F, 3, 12, 4, scale + 0.25F);
+            this.rightSleeve.addBox(-2.0F, -2.0F, -2.0F, 3, 12, 4, scale + 0.25F);
             this.rightSleeve.setPivot(-5.0F, 2.5F, 10.0F);
         } else {
             this.leftArm = this.createModelPart(32, 48);
-            this.leftArm.addCuboid(-1.0F, -2.0F, -2.0F, 4, 12, 4, scale);
+            this.leftArm.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, scale);
             this.leftArm.setPivot(5.0F, 2.0F, 0.0F);
             this.leftSleeve = this.createModelPart(48, 48);
-            this.leftSleeve.addCuboid(-1.0F, -2.0F, -2.0F, 4, 12, 4, scale + 0.25F);
+            this.leftSleeve.addBox(-1.0F, -2.0F, -2.0F, 4, 12, 4, scale + 0.25F);
             this.leftSleeve.setPivot(5.0F, 2.0F, 0.0F);
             this.rightSleeve = this.createModelPart(40, 32);
-            this.rightSleeve.addCuboid(-3.0F, -2.0F, -2.0F, 4, 12, 4, scale + 0.25F);
+            this.rightSleeve.addBox(-3.0F, -2.0F, -2.0F, 4, 12, 4, scale + 0.25F);
             this.rightSleeve.setPivot(-5.0F, 2.0F, 10.0F);
         }
 
         this.leftLeg = this.createModelPart(16, 48);
-        this.leftLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, scale);
+        this.leftLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, scale);
         this.leftLeg.setPivot(2.0F, 12.0F, 0.0F);
         this.leftPantLeg = this.createModelPart(0, 48);
-        this.leftPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, scale + 0.25F);
+        this.leftPantLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, scale + 0.25F);
         this.leftPantLeg.setPivot(1.9F, 12.0F, 0.0F);
         this.rightPantLeg = this.createModelPart(0, 32);
-        this.rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, scale + 0.25F);
+        this.rightPantLeg.addBox(-2.0F, 0.0F, -2.0F, 4, 12, 4, scale + 0.25F);
         this.rightPantLeg.setPivot(-1.9F, 12.0F, 0.0F);
         this.jacket = this.createModelPart(16, 32);
-        this.jacket.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, scale + 0.25F);
+        this.jacket.addBox(-4.0F, 0.0F, -2.0F, 8, 12, 4, scale + 0.25F);
         this.jacket.setPivot(0.0F, 0.0F, 0.0F);
     }
 
@@ -86,9 +86,9 @@ public class PlayerEntityModel extends BipedEntityModel {
 
     public void copyPositionAndRotation(ModelPart from, ModelPart to) {
         to.setPivot(from.pivotX, from.pivotY, from.pivotZ);
-        to.yaw = from.yaw;
-        to.pitch = from.pitch;
-        to.roll = from.roll;
+        to.rotationY = from.rotationY;
+        to.rotationX = from.rotationX;
+        to.rotationZ = from.rotationZ;
     }
 
     @Override

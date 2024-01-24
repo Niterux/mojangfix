@@ -17,8 +17,8 @@ package pl.js6pak.mojangfix.mixin.client.skin;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import lombok.Getter;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.living.LivingEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,12 +37,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         super(world);
     }
 
-    @Inject(method = "updateCapeUrl", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "registerCloak", at = @At("HEAD"), cancellable = true)
     private void cancelUpdateCapeUrl(CallbackInfo ci) {
         ci.cancel();
     }
 
-    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerEntity;texture:Ljava/lang/String;"))
+    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/living/player/PlayerEntity;texture:Ljava/lang/String;"))
     private void redirectTexture(PlayerEntity instance, String value) {
         this.setTextureModel(GameProfile.TextureModel.NORMAL);
     }

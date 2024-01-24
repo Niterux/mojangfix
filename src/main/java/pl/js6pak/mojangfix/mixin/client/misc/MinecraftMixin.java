@@ -18,7 +18,7 @@ package pl.js6pak.mojangfix.mixin.client.misc;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.options.GameOptions;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -40,26 +40,26 @@ public abstract class MinecraftMixin {
     public GameOptions options;
 
     @Shadow
-    public abstract void setScreen(Screen screen);
+    public abstract void openScreen(Screen screen);
 
     @Shadow
-    public abstract boolean isWorldRemote();
+    public abstract boolean isMultiplayer();
 
-    @Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", ordinal = 0, shift = At.Shift.BEFORE))
+    @Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugProfilerEnabled:Z", ordinal = 0, shift = At.Shift.BEFORE))
     private void onF3(CallbackInfo ci) {
         GameSettingsAccessor gameSettings = (GameSettingsAccessor) this.options;
         gameSettings.setShowDebugInfoGraph(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL));
     }
 
-    @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugHud:Z", opcode = Opcodes.GETFIELD))
+    @Redirect(method = "run", at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugProfilerEnabled:Z", opcode = Opcodes.GETFIELD))
     private boolean getShowDebugInfo(GameOptions gameSettings) {
-        return gameSettings.debugHud && ((GameSettingsAccessor) this.options).isShowDebugInfoGraph();
+        return gameSettings.debugProfilerEnabled && ((GameSettingsAccessor) this.options).isShowDebugInfoGraph();
     }
 
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isWorldRemote()Z", ordinal = 0))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isMultiplayer()Z", ordinal = 0))
     private void onKey(CallbackInfo ci) {
-        if (this.isWorldRemote() && Keyboard.getEventKey() == MojangFixClientMod.COMMAND_KEYBIND.code) {
-            this.setScreen(((ChatScreenAccessor) new ChatScreen()).setInitialMessage("/"));
+        if (this.isMultiplayer() && Keyboard.getEventKey() == MojangFixClientMod.COMMAND_KEYBIND.keyCode) {
+            this.openScreen(((ChatScreenAccessor) new ChatScreen()).setInitialMessage("/"));
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class MinecraftMixin {
         Display.create(pixelformat);
     }
 
-    @Inject(method = "startSessionCheck", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "initTimerHackThread", at = @At("HEAD"), cancellable = true)
     private void disableSessionCheck(CallbackInfo ci) {
         ci.cancel();
     }

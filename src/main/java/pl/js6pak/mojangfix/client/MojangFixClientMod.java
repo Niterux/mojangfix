@@ -16,7 +16,7 @@
 package pl.js6pak.mojangfix.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.options.KeyBinding;
 import org.lwjgl.input.Keyboard;
 
 public class MojangFixClientMod implements ClientModInitializer {

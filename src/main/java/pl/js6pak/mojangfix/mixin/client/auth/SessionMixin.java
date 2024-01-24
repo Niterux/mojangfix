@@ -17,7 +17,7 @@ package pl.js6pak.mojangfix.mixin.client.auth;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import lombok.Getter;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.Session;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

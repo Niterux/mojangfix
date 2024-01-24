@@ -27,6 +27,6 @@ import pl.js6pak.mojangfix.MojangFixMod;
 public abstract class TitleScreenMixin extends Screen {
     @Inject(method = "render", at = @At("RETURN"))
     private void onDrawScreen(CallbackInfo ci) {
-        this.drawStringWithShadow(this.textRenderer, MojangFixMod.getMetadata().getName() + " " + MojangFixMod.getVersion(), 2, 2 + 10, 0x505050);
+        this.drawString(this.textRenderer, MojangFixMod.getMetadata().getName() + " " + MojangFixMod.getVersion(), 2, 2 + 10, 0x505050);
     }
 }

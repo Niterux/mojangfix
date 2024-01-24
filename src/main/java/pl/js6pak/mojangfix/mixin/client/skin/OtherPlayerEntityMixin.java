@@ -15,8 +15,8 @@
 
 package pl.js6pak.mojangfix.mixin.client.skin;
 
-import net.minecraft.client.network.OtherPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.entity.living.player.RemotePlayerEntity;
+import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pl.js6pak.mojangfix.client.skinfix.SkinService;
 
-@Mixin(OtherPlayerEntity.class)
+@Mixin(RemotePlayerEntity.class)
 public abstract class OtherPlayerEntityMixin extends PlayerEntity {
 	public OtherPlayerEntityMixin(World arg) {
 		super(arg);

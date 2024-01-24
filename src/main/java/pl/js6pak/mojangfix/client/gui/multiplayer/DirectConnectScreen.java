@@ -20,7 +20,7 @@ import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.locale.LanguageManager;
 import org.lwjgl.input.Keyboard;
 import pl.js6pak.mojangfix.client.gui.CallbackButtonWidget;
 
@@ -45,7 +45,7 @@ public class DirectConnectScreen extends Screen {
 
     public static void connect(Minecraft minecraft, String addressText) {
         String[] split = addressText.split(":");
-        minecraft.setScreen(new ConnectScreen(minecraft, split[0], split.length > 1 ? parseIntWithDefault(split[1], DEFAULT_PORT) : DEFAULT_PORT));
+        minecraft.openScreen(new ConnectScreen(minecraft, split[0], split.length > 1 ? parseIntWithDefault(split[1], DEFAULT_PORT) : DEFAULT_PORT));
     }
 
     @Override
@@ -56,15 +56,15 @@ public class DirectConnectScreen extends Screen {
     public void init() {
         Keyboard.enableRepeatEvents(true);
 
-        TranslationStorage translationStorage = TranslationStorage.getInstance();
-        this.buttons.add(connectButton = new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, translationStorage.get("multiplayer.connect"), button -> {
+		LanguageManager translationStorage = LanguageManager.getInstance();
+        this.buttons.add(connectButton = new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, translationStorage.translate("multiplayer.connect"), button -> {
             String address = this.addressField.getText().trim();
             this.minecraft.options.lastServer = address.replaceAll(":", "_");
             this.minecraft.options.save();
             connect(this.minecraft, address);
         }));
-        this.buttons.add(new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 120 + 12, translationStorage.get("gui.cancel"), button -> {
-            this.minecraft.setScreen(this.parent);
+        this.buttons.add(new CallbackButtonWidget(this.width / 2 - 100, this.height / 4 + 120 + 12, translationStorage.translate("gui.cancel"), button -> {
+            this.minecraft.openScreen(this.parent);
         }));
         String lastServer = this.minecraft.options.lastServer.replaceAll("_", ":");
         connectButton.active = lastServer.length() > 0;
@@ -93,8 +93,8 @@ public class DirectConnectScreen extends Screen {
 
     public void render(int mouseX, int mouseY, float delta) {
         this.renderBackground();
-        this.drawCenteredTextWithShadow(this.textRenderer, "Direct connect", this.width / 2, this.height / 4 - 60 + 20, 16777215);
-        this.drawCenteredTextWithShadow(this.textRenderer, TranslationStorage.getInstance().get("multiplayer.ipinfo"), this.width / 2, this.height / 4 - 60 + 60 + 36, 10526880);
+        this.drawCenteredString(this.textRenderer, "Direct connect", this.width / 2, this.height / 4 - 60 + 20, 16777215);
+        this.drawCenteredString(this.textRenderer, LanguageManager.getInstance().translate("multiplayer.ipinfo"), this.width / 2, this.height / 4 - 60 + 60 + 36, 10526880);
         this.addressField.render();
         super.render(mouseX, mouseY, delta);
     }
