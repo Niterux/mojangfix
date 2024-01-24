@@ -163,7 +163,7 @@ public class MultiplayerScreen extends Screen {
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         this.serverListWidget.render(mouseX, mouseY, delta);
-        this.drawString(this.textRenderer, this.title, this.width / 2, 20, 16777215);
+        this.drawCenteredString(this.textRenderer, this.title, this.width / 2, 20, 16777215);
         super.render(mouseX, mouseY, delta);
     }
 
