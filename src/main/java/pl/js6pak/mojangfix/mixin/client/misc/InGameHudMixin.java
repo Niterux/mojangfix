@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import pl.js6pak.mojangfix.mixin.client.MinecraftAccessor;
 
 @Mixin(GameGui.class)
 public class InGameHudMixin extends GuiElement {
@@ -36,6 +37,7 @@ public class InGameHudMixin extends GuiElement {
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugProfilerEnabled:Z"))
     )
     private void onRenderGameOverlay(CallbackInfo ci) {
-        this.drawString(this.minecraft.textRenderer, "Seed: " + this.minecraft.world.getSeed(), 2, 88 + 8 + 8, 0xe0e0e0);
+		if(!MinecraftAccessor.getInstance().isMultiplayer())
+	        this.drawString(this.minecraft.textRenderer, "Seed: " + this.minecraft.world.getSeed(), 2, 88 + 8 + 8, 0xe0e0e0);
     }
 }
