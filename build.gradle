@@ -49,7 +49,6 @@ def configure(project) {
 		compileOnly lombok
 		annotationProcessor lombok
 		include(implementation("com.github.GeyserMC:MCAuthLib:d9d773e5d50327c33898c65cd545a4f6ef3ba1b5"))
-		include(implementation "org.slf4j:slf4j-api:1.8.0-beta4")
 		project.ploceus.addCommonLibraries()
 	}
 
