@@ -18,33 +18,14 @@ package pl.js6pak.mojangfix.mixin.client.controls;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pl.js6pak.mojangfix.client.MojangFixClientMod;
 import pl.js6pak.mojangfix.mixinterface.GameSettingsAccessor;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 @Mixin(GameOptions.class)
 public class GameOptionsMixin implements GameSettingsAccessor {
-    @Shadow
-    public KeyBinding[] keyBindings;
-
     @Unique
     @Getter
     @Setter
     private boolean showDebugInfoGraph;
-
-    @Inject(method = {"<init>()V", "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V"}, at = @At("RETURN"))
-    public void onInit(CallbackInfo ci) {
-        ArrayList<KeyBinding> newKeys = new ArrayList<>(Arrays.asList(keyBindings));
-        newKeys.add(MojangFixClientMod.COMMAND_KEYBIND);
-		keyBindings = newKeys.toArray(new KeyBinding[0]);
-    }
 }
