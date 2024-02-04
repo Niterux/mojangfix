@@ -26,7 +26,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pl.js6pak.mojangfix.client.skinfix.CapeImageProcessor;
 import pl.js6pak.mojangfix.mixinterface.PlayerEntityAccessor;
 import pl.js6pak.mojangfix.mixinterface.SkinImageProcessorAccessor;
 
@@ -58,13 +57,5 @@ public class WorldRendererMixin {
             skinImageProcessorAccessor.setTextureModel(playerEntityAccessor.getTextureModel());
         }
         return def;
-    }
-
-    @ModifyArg(
-        method = "onEntityAdded", index = 1,
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/texture/TextureManager;getHttpTexture(Ljava/lang/String;Lnet/minecraft/client/render/texture/HttpImageProcessor;)Lnet/minecraft/client/render/texture/HttpTexture;", ordinal = 1)
-    )
-    private HttpImageProcessor redirectCapeProcessor(HttpImageProcessor def) {
-        return new CapeImageProcessor();
     }
 }

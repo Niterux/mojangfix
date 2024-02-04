@@ -23,7 +23,7 @@ import pl.js6pak.mojangfix.client.skinfix.SkinService;
 
 @Mixin(ResourceDownloadThread.class)
 public class ResourceDownloadThreadMixin {
-    @ModifyConstant(method = "run", constant = @Constant(stringValue = "http://s3.amazonaws.com/MinecraftResources/"), remap = false)
+    @ModifyConstant(method = "run()V", constant = @Constant(stringValue = "http://s3.amazonaws.com/MinecraftResources/"))
     private String getResourcesUrl(String def) {
         return SkinService.RESOURCES_URL;
     }

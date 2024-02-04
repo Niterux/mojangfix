@@ -16,16 +16,17 @@
 package pl.js6pak.mojangfix.mixin.client.skin;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import lombok.Getter;
 import net.minecraft.entity.living.LivingEntity;
 import net.minecraft.entity.living.player.PlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pl.js6pak.mojangfix.mixinterface.PlayerEntityAccessor;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import pl.js6pak.mojangfix.client.skinfix.SkinService;
+import pl.js6pak.mojangfix.mixinterface.PlayerEntityAccessor;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEntityAccessor {
@@ -37,10 +38,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerEn
         super(world);
     }
 
-    @Inject(method = "registerCloak", at = @At("HEAD"), cancellable = true)
-    private void cancelUpdateCapeUrl(CallbackInfo ci) {
-        ci.cancel();
-    }
+    @ModifyExpressionValue(method = "registerCloak", at = @At(value = "CONSTANT", args = "stringValue=http://s3.amazonaws.com/MinecraftCloaks/"))
+    private String retromcCapeUrl(String original) {
+		return "https://assets.retromc.org/capes/";
+	}
 
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/living/player/PlayerEntity;texture:Ljava/lang/String;"))
     private void redirectTexture(PlayerEntity instance, String value) {

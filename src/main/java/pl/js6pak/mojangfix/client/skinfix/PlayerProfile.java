@@ -25,14 +25,12 @@ import java.util.UUID;
 public class PlayerProfile {
     private UUID uuid;
     private String skinUrl;
-    private String capeUrl;
     private GameProfile.TextureModel model;
     private Instant lastFetched = Instant.now();
 
-    public PlayerProfile(UUID uuid, String skinUrl, String capeUrl, GameProfile.TextureModel model) {
+    public PlayerProfile(UUID uuid, String skinUrl, GameProfile.TextureModel model) {
         this.uuid = uuid;
         this.skinUrl = skinUrl;
-        this.capeUrl = capeUrl;
         this.model = model;
     }
 }

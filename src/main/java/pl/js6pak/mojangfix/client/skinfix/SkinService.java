@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class SkinService {
-    public static final String RESOURCES_URL = "http://mcresources.modification-station.net/MinecraftResources/";
+    public static final String RESOURCES_URL = "https://mcresources.modification-station.net/MinecraftResources/";
     public static final String STEVE_TEXTURE = "/mob/steve.png";
     public static final String ALEX_TEXTURE = "/mob/alex.png";
 
@@ -58,7 +58,6 @@ public class SkinService {
         PlayerEntityAccessor accessor = (PlayerEntityAccessor) player;
         accessor.setTextureModel(playerProfile.getModel());
         player.skin = playerProfile.getSkinUrl();
-        player.cloak = player.cape = playerProfile.getCapeUrl();
         MinecraftAccessor.getInstance().worldRenderer.onEntityAdded(player);
     }
 
@@ -126,9 +125,7 @@ public class SkinService {
                 GameProfile.Texture skin = textures.get(GameProfile.TextureType.SKIN);
                 GameProfile.TextureModel model = skin == null ? SkinService.getTextureModelForUUID(profile.getId()) : skin.getModel();
                 String skinUrl = skin == null ? null : skin.getURL();
-                GameProfile.Texture cape = textures.get(GameProfile.TextureType.CAPE);
-                String capeUrl = cape == null ? null : cape.getURL();
-                PlayerProfile playerProfile = new PlayerProfile(profile.getId(), skinUrl, capeUrl, model);
+                PlayerProfile playerProfile = new PlayerProfile(profile.getId(), skinUrl, model);
 
                 MojangFixMod.getLogger().info("Downloaded profile: " + profile.getName() + " (" + profile.getId() + ")");
                 profiles.put(name, playerProfile);

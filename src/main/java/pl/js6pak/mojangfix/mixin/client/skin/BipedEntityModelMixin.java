@@ -29,8 +29,7 @@ import pl.js6pak.mojangfix.client.skinfix.PlayerEntityModel;
 public class BipedEntityModelMixin {
     @Redirect(
             method = "<init>(FF)V",
-            at = @At(value = "NEW", target = "net/minecraft/client/render/model/ModelPart"),
-            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/client/render/model/entity/HumanoidModel;deadmau5Ears:Lnet/minecraft/client/render/model/ModelPart;", shift = Shift.AFTER))
+            at = @At(value = "NEW", target = "net/minecraft/client/render/model/ModelPart")
     )
     private ModelPart onTexturedQuad(int u, int v) {
         ModelPart modelPart = new ModelPart(u, v);
